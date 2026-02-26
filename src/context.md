@@ -131,6 +131,15 @@
 
 ---
 
+### 14. 설계서 보완 적용
+**User:** A (설계서 보완 적용 요청)
+
+**Action:** `src/design_wpa_v1.md`에 권장 보완사항(인증/비밀번호 해시, VAPID 관리, 서버리스 제약, 재시도 정책 등)과 간단한 API 명세를 추가하고 커밋/푸시함
+
+**Commit:** a0b6e40 - Add recommendations, security considerations and API spec to design_wpa_v1.md
+
+---
+
 
 ## 프로젝트 정보
 
