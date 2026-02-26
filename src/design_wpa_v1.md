@@ -182,27 +182,26 @@ CREATE TABLE push_recv (
 
 ```
 frontend/
-  ├─ login/                → 로그인 관련 추가
-  ├─ js/                   → 자바스크립트 폴더
-  ├─ images/               → 이미지 관련 폴더
-  ├─ admin/                → 어드민 기능용 폴더
-  ├─ css/                  → 스타일 관련 소스 저장
-  ├─ config/               → 설정 파일 소스 저장
-  ├─ index.html            → 메인 UI
-  ├─ admin.html            → 어드민 페이지
-  ├─ style.css             → 기본 스타일시트
-  └─ sw.js                 → 서비스 워커 (푸시 수신)
+  ├─ login/
+  │   ├─ index.html
+  │   ├─ main.js
+  │   └─ styles.css
+  ├─ admin/
+  │   ├─ admin.html
+  │   ├─ admin.js
+  │   └─ admin.css
+  ├─ images/
+  ├─ config/
+  ├─ sw.js
 ```
 
 ### 폴더별 설명
 
-- **login/**: 로그인 화면 HTML, CSS, 인증 검증 JS 등
-- **js/**: 사용자 웹 기능(구독, 푸시 수신), 관리자 기능(메시지 관리, 전송) 등 일반적인 자바스크립트 단위 기능
+- **login/**: 로그인 화면 및 해당 기능의 `main.js`, `styles.css` 포함
+- **admin/**: 관리자 페이지와 해당 `admin.js`, `admin.css` 포함(메시지 등록/전송/결과 조회)
 - **images/**: 로고, 아이콘, UI 비주얼 자원
-- **admin/**: 어드민 로그인, 메시지 등록/수정, 전송, 결과 조회 관련 파일
- - **css/**: 공통 스타일, 테마 및 컴포넌트별 CSS/SCSS 소스
- - **config/**: 환경별 설정 파일들(e.g., firebase 설정, VAPID keys, 기타 JSON/YAML 설정)
-
+- **config/**: 환경별 설정 파일들(e.g., firebase 설정, VAPID keys, 기타 JSON/YAML 설정)
+- **sw.js**: 최상위에 위치한 서비스 워커 — 푸시 수신 및 알림 처리
 
 ---
 
