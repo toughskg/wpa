@@ -111,17 +111,26 @@
 
 ---
 
-### 11. DB 테이블 구조 추가
-**User:** DB 관련 테이블 구조
-1. user (cs팀원): cs_id, pw, name, dept
-2. admin: admin_id, pw, name
-3. cs: no, title, contents, status(1:new/2:assign/3:fixing/4:fixed/5:finish), open_date, finish_date, cs_id, assign_date
-4. push: push_no, push_content, write_date, admin_id
-5. push_recv: recv_no, push_no, cs_id, send_status, read_status, send_date, read_date
+### 12. user 테이블에 푸시 구독 여부 컬럼 추가
+**User:** user 테이블에 웹 푸시 구독여부에 해당하는 컬럼 allow_yn 컬럼을 추가해줘
 
-**Action:** design_wpa_v1.md의 데이터 모델 섹션을 Firebase + SQL 테이블 구조로 확장
+**Action:** 
+- user 테이블에 `allow_yn VARCHAR(1) DEFAULT 'N'` 컬럼 추가
+- 웹 푸시 구독 여부 관리 (Y=허용, N=미허용)
 
 ---
+
+### 13. Git 커밋
+**User:** 현재까지 내용을 git에 commit 해줘
+
+**Action:**
+- 커밋 대상: src/context.md, src/design_wpa_v1.md
+- 커밋 ID: `91b9bb1`
+- 커밋 메시지: "Add design document and conversation context: WPA v1 web push system design with DB schema"
+- 파일 변경: 2개 파일, 354줄 추가
+
+---
+
 
 ## 프로젝트 정보
 
