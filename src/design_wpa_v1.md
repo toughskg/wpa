@@ -205,4 +205,40 @@ frontend/
 
 ---
 
+## 권장 및 보완사항
+
+- **관리자 인증 보강**: `admin/12345`처럼 자격을 하드코딩하지 않습니다. 초기 계정은 환경변수 또는 시크릿으로 주입하고, 로그인은 `/api/admin/login` 같은 인증 엔드포인트를 통해 처리합니다.
+- **비밀번호 저장/검증**: `user`/`admin`의 `pw`는 평문 저장 금지. bcrypt 같은 안전한 해시 알고리즘으로 저장 및 검증하도록 명시합니다.
+- **구독 데이터 원본(SoT) 명확화**: `subscriptions`(Firebase)와 `push_recv`(SQL)가 혼재되어 있음. 어느 DB를 소스 오브 트루스로 할지 결정하고, 동기화 전략(예: 서버가 Firebase에 쓰고 SQL은 리포트/이력용으로 사용)을 문서화하세요.
+- **Firebase 보안 규칙**: 테스트 목적이라도 최소 권한의 보안 규칙을 명시하고, 서비스 계정 키와 VAPID 비밀은 서버 사이드(환경변수)에만 보관합니다.
+- **VAPID 키 관리**: `VAPID_PRIVATE_KEY`는 절대 클라이언트에 노출하지 않으며, 키 롤오버(교체) 절차와 보관 정책을 포함하세요.
+- **HTTPS / 서비스 워커 요구**: 웹 푸시는 HTTPS가 필수입니다(로컬 `localhost` 예외). 서비스 워커의 `scope`와 등록 위치도 설계에 명시하세요.
+- **서버리스 제약 고려**: Vercel의 함수 타임아웃/동시성 제약으로 대량 전송시 문제가 될 수 있습니다. 대량 전송은 큐(예: Cloud Tasks, BullMQ) 또는 백그라운드 워커로 처리하는 방안을 권장합니다.
+- **재시도·백오프·구독 만료 처리**: 푸시 실패(410/404 등)는 구독 만료의 신호일 수 있으므로 자동 삭제/정리 정책과 재시도(backoff) 전략을 마련하세요.
+- **읽음 플래그 신뢰성**: 알림 클릭에서 전송되는 "읽음"은 클라이언트 신호이므로 서버 타임스탬프와 사용자 인증을 함께 기록해 신뢰도를 높이세요.
+- **로깅·모니터링**: 전송 실패, 성공 통계, 큐 상태 등을 수집할 로그/모니터링 전략을 설계하세요.
+- **DB 인덱스·제약**: `push_recv(push_no, cs_id)` 등 자주 조회되는 컬럼에 인덱스를 추가하고, 외래키 제약을 명세하세요.
+
+## 간단한 API 명세 (예시)
+
+- `POST /api/admin/login`
+  - Request: `{ "admin_id": "admin", "pw": "plaintext" }`
+  - Response: `{ "token": "<jwt>" }`
+
+- `POST /api/subscribe`
+  - Request: `{ "cs_id": "u1", "subscription": { endpoint, keys:{p256dh,auth} } }`
+  - Response: `{ "ok": true }`
+
+- `POST /api/push/trigger`
+  - Request: `{ "push_no": 123, "targets": ["u1","u2"] }`
+  - Response: `{ "sent": 2, "failed": 0 }`
+
+- `POST /api/push/mark-read`
+  - Request: `{ "push_no": 123, "cs_id": "u1" }`
+  - Response: `{ "ok": true, "read_date": "2026-02-26T..." }`
+
+위 API들은 인증 토큰(JWT) 또는 세션 기반 인증으로 보호되어야 합니다.
+
+---
+
 이 문서는 WPA 프로젝트에 대한 첫 버전 설계입니다. 필요 시 확장 및 개선 가능합니다.
